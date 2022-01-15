@@ -88,8 +88,11 @@ kotlin {
                 implementation(kotlin("reflect"))
                 implementation("org.springframework.boot:spring-boot-starter")
                 implementation("org.springframework.boot:spring-boot-devtools")
+                implementation("org.springframework.boot:spring-boot-starter-web")
                 implementation("org.springframework.boot:spring-boot-starter-webflux")
-                implementation("org.springframework.boot:spring-boot-starter-security")
+
+                implementation("org.apache.httpcomponents:httpclient:4.5.10")
+                implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
             }
         }
         val backendTest by getting {
