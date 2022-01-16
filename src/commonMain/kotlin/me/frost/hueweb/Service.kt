@@ -9,5 +9,8 @@ interface IPingService {
 
 @KVService
 interface IBridgeService {
+
     suspend fun getAllLights(): List<Light>
+
+    suspend fun switchLight(light: Light)
 }
