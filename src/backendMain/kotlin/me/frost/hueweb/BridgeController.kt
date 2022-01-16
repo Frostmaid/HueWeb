@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.RestController
 class BridgeController(private val bridgeService: BridgeService) {
 
     @GetMapping("/lights")
-    fun lights(): Light {
+    fun lights(): List<Light> {
+
         return bridgeService.getAllLights()
     }
 }

@@ -35,6 +35,9 @@ class KVApplication {
     @Value("\${bridgeUrl}")
     private val bridgeUrl: String = ""
 
+    @Value("\${appKey}")
+    private val appKey: String = ""
+
     @Bean
     fun getManagers() = listOf(PingServiceManager)
 
@@ -65,17 +68,22 @@ class KVApplication {
                 }
             }
         )
+
         val sslContext: SSLContext = SSLContext.getInstance("SSL")
         sslContext.init(null, trustAllCerts, SecureRandom())
+
         val httpClient = HttpClients.custom()
             .setSSLContext(sslContext)
             .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
             .build()
-        val customRequestFactory = HttpComponentsClientHttpRequestFactory()
-        customRequestFactory.httpClient = httpClient
+
+        val customRequestFactory = HttpComponentsClientHttpRequestFactory().apply {
+            this.httpClient = httpClient
+        }
         return builder
             .requestFactory { customRequestFactory }
             .rootUri(bridgeUrl)
+            .defaultHeader("hue-application-key", appKey)
             .build()
     }
 }
