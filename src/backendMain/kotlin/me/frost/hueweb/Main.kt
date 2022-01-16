@@ -3,31 +3,33 @@ package me.frost.hueweb
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import org.apache.http.conn.ssl.NoopHostnameVerifier
-import org.apache.http.impl.client.HttpClients
+import io.netty.handler.ssl.SslContextBuilder
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory
+import kotlinx.serialization.json.Json
+import org.slf4j.bridge.SLF4JBridgeHandler.install
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.boot.runApplication
-import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
-import org.springframework.web.client.RestTemplate
-import java.security.SecureRandom
-import java.security.cert.X509Certificate
-import javax.net.ssl.SSLContext
-import javax.net.ssl.TrustManager
-import javax.net.ssl.X509TrustManager
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
+import org.springframework.http.codec.json.KotlinSerializationJsonDecoder
+import org.springframework.http.codec.json.KotlinSerializationJsonEncoder
+import org.springframework.web.reactive.function.client.ExchangeStrategies
+import org.springframework.web.reactive.function.client.WebClient
+import reactor.netty.http.client.HttpClient
+import reactor.netty.tcp.SslProvider.SslContextSpec
+import reactor.netty.tcp.TcpClient
+
+import javax.net.ssl.SSLException
 
 
 @SpringBootApplication
 @EnableAutoConfiguration(
     exclude = [
         org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration::class,
-        org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration::class,
-        SecurityAutoConfiguration::class
+        org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration::class
     ]
 )
 class KVApplication {
@@ -39,53 +41,42 @@ class KVApplication {
     private val appKey: String = ""
 
     @Bean
-    fun getManagers() = listOf(PingServiceManager)
+    fun getManagers() = listOf(PingServiceManager, BridgeServiceManager)
 
     @Bean
-    @Primary
-    fun objectMapper() = ObjectMapper().apply {
-        registerModule(KotlinModule.Builder().build())
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-    }
-
-    @Bean
-    fun restTemplate(builder: RestTemplateBuilder): RestTemplate {
-
-        val trustAllCerts = arrayOf<TrustManager>(
-            object : X509TrustManager {
-                override fun getAcceptedIssuers(): Array<X509Certificate> {
-                    return arrayOf()
-                }
-
-                override fun checkClientTrusted(
-                    certs: Array<X509Certificate>, authType: String
-                ) {
-                }
-
-                override fun checkServerTrusted(
-                    certs: Array<X509Certificate>, authType: String
-                ) {
-                }
-            }
-        )
-
-        val sslContext: SSLContext = SSLContext.getInstance("SSL")
-        sslContext.init(null, trustAllCerts, SecureRandom())
-
-        val httpClient = HttpClients.custom()
-            .setSSLContext(sslContext)
-            .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
-            .build()
-
-        val customRequestFactory = HttpComponentsClientHttpRequestFactory().apply {
-            this.httpClient = httpClient
+    fun bridgeWebClient(webClientBuilder: WebClient.Builder): WebClient {
+        val json = Json {
+            ignoreUnknownKeys = true
+            isLenient = true
         }
-        return builder
-            .requestFactory { customRequestFactory }
-            .rootUri(bridgeUrl)
+
+        val strategies = ExchangeStrategies
+            .builder()
+            .codecs { clientDefaultCodecsConfig ->
+                run {
+                    clientDefaultCodecsConfig.defaultCodecs()
+                        .kotlinSerializationJsonDecoder(KotlinSerializationJsonDecoder(json))
+                    clientDefaultCodecsConfig.defaultCodecs()
+                        .kotlinSerializationJsonEncoder(KotlinSerializationJsonEncoder(json))
+
+                }
+            }.build()
+
+        val sslContext = SslContextBuilder
+            .forClient()
+            .trustManager(InsecureTrustManagerFactory.INSTANCE)
+            .build()
+
+        val httpClient = HttpClient.create().secure { t -> t.sslContext(sslContext) }
+
+        return webClientBuilder
+            .baseUrl(bridgeUrl)
             .defaultHeader("hue-application-key", appKey)
+            .exchangeStrategies(strategies)
+            .clientConnector(ReactorClientHttpConnector(httpClient))
             .build()
     }
+
 }
 
 fun main(args: Array<String>) {

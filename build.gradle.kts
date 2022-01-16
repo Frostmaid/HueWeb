@@ -73,6 +73,7 @@ kotlin {
             dependencies {
                 api("io.kvision:kvision-server-spring-boot:$kvisionVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
             }
             kotlin.srcDir("build/generated-src/common")
         }
@@ -88,8 +89,10 @@ kotlin {
                 implementation(kotlin("reflect"))
                 implementation("org.springframework.boot:spring-boot-starter")
                 implementation("org.springframework.boot:spring-boot-devtools")
-                implementation("org.springframework.boot:spring-boot-starter-web")
+                implementation("org.springframework.boot:spring-boot-starter-security")
                 implementation("org.springframework.boot:spring-boot-starter-webflux")
+
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
 
                 implementation("org.apache.httpcomponents:httpclient:4.5.10")
                 implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")

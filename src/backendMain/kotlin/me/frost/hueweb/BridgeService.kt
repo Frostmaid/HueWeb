@@ -1,19 +1,26 @@
 package me.frost.hueweb
 
+import kotlinx.coroutines.reactive.awaitSingle
+import org.springframework.beans.factory.config.ConfigurableBeanFactory
+import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestTemplate
+import org.springframework.web.reactive.function.client.WebClient
 
 @Service
-class BridgeService(private val restTemplate: RestTemplate) {
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+actual class BridgeService(
+    private val bridgeWebClient: WebClient
+) : IBridgeService {
 
-    fun getAllLights(): List<Light> {
+    override suspend fun getAllLights(): List<Light> {
+        val result = bridgeWebClient
+            .get()
+            .uri("/light")
+            .retrieve()
+            .toEntity(Lights::class.java)
+            .awaitSingle()
 
-        val lights = restTemplate.getForObject(
-            "/light",
-            Lights::class.java
-        )
-
-        return lights?.data ?: emptyList()
+        return result?.body?.data?.map { it } ?: emptyList()
     }
 
 }

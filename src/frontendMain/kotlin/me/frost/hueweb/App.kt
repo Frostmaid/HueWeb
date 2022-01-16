@@ -22,9 +22,7 @@ class App : Application() {
         val root = root("kvapp") {
         }
         AppScope.launch {
-            val pingResult = Model.ping("Hello world from client!")
-            root.add(Span(pingResult))
-            root.add(Span("fooo"))
+            Model.lights().forEach { root.add(Span(it.metadata.name)) }
         }
     }
 }
