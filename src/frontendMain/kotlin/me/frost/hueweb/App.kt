@@ -1,14 +1,8 @@
 package me.frost.hueweb
 
-import io.kvision.Application
-import io.kvision.CoreModule
-import io.kvision.BootstrapModule
-import io.kvision.BootstrapCssModule
-import io.kvision.FontAwesomeModule
-import io.kvision.html.Span
-import io.kvision.module
+import io.kvision.*
 import io.kvision.panel.root
-import io.kvision.startApplication
+import io.kvision.table.*
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -22,7 +16,28 @@ class App : Application() {
         val root = root("kvapp") {
         }
         AppScope.launch {
-            Model.lights().forEach { root.add(Span(it.metadata.name)) }
+            val lights = Model.lights()
+
+            val table = Table(
+                headerNames = listOf("Name", "Status", "Type"),
+                types = setOf(TableType.BORDERED, TableType.SMALL, TableType.STRIPED, TableType.HOVER),
+                responsiveType = ResponsiveType.RESPONSIVE
+            ) {
+                lights.forEach {
+                    row {
+                        cell(it.metadata.name)
+                        cell(
+                            when {
+                                it.on.on -> "on"
+                                else -> "off"
+                            }
+                        )
+                        cell(it.metadata.archetype)
+                    }
+                }
+
+            }
+            root.add(table)
         }
     }
 }
