@@ -1,49 +1,67 @@
 package me.frost.hueweb
 
 import io.kvision.*
-import io.kvision.html.Button
+import io.kvision.core.Container
 import io.kvision.html.ButtonStyle
+import io.kvision.html.Span
 import io.kvision.html.button
+import io.kvision.html.div
 import io.kvision.panel.root
-import io.kvision.table.*
+import io.kvision.redux.createReduxStore
+import io.kvision.state.bind
+import io.kvision.tabulator.ColumnDefinition
+import io.kvision.tabulator.Layout
+import io.kvision.tabulator.TabulatorOptions
+import io.kvision.tabulator.tabulator
 import kotlinx.browser.window
-import kotlinx.coroutines.*
-import me.frost.hueweb.Model.switchLights
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.asCoroutineDispatcher
+
 
 val AppScope = CoroutineScope(window.asCoroutineDispatcher())
 
 class App : Application() {
 
+    private val store = createReduxStore(::lightsReducer, listOf())
+
     override fun start(state: Map<String, Any>) {
-        val root = root("kvapp") {}
+        root("kvapp") {
+            div().bind(Model.lightsList) { state ->
+                lightTable(state)
+            }
+        }
 
-        AppScope.launch {
-            val lights = Model.lights()
+        store.dispatch(LightAction.Lights)
+    }
 
-            val table = Table(
-                headerNames = listOf("Name", "ON", "Type"),
-                types = setOf(TableType.BORDERED, TableType.SMALL, TableType.STRIPED, TableType.HOVER),
-                responsiveType = ResponsiveType.RESPONSIVE
-            ) {
-                lights.forEach { light ->
-                    row {
-                        cell(light.metadata.name)
-                        cell {
-                            button(light.on.on.toString(), style = ButtonStyle.PRIMARY) {
+    private fun Container.lightTable(state: List<Light>) {
+
+        tabulator(
+            state,
+            dataUpdateOnEdit = true,
+            options = TabulatorOptions(
+                layout = Layout.FITCOLUMNS,
+                columns = listOf(
+                    ColumnDefinition("Name", "metadata.name"),
+                    ColumnDefinition(
+                        "ON",
+                        "on.on",
+                        formatterComponentFunction = { _, _, data: Light ->
+                            button(data.on.on.toString(), style = ButtonStyle.PRIMARY) {
                                 onClick {
-                                    AppScope.launch {
-                                        switchLights(light)
-                                    }
+                                    store.dispatch(LightAction.SwitchLight(data))
+                                    store.dispatch(LightAction.Lights)
                                 }
                             }
                         }
-                        cell(light.metadata.archetype)
-                    }
-                }
-
-            }
-            root.add(table)
-        }
+                    ),
+                    ColumnDefinition(
+                        "Type",
+                        "type",
+                        formatterComponentFunction = { _, _, data: Light -> Span(data.metadata.archetype) })
+                )
+            )
+        )
     }
 }
 
