@@ -12,4 +12,4 @@ pluginManagement {
         }
     }
 }
-rootProject.name = "hueweb"
+rootProject.name = "huebert"

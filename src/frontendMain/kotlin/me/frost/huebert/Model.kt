@@ -1,4 +1,4 @@
-package me.frost.hueweb
+package me.frost.huebert
 
 import io.kvision.state.ObservableList
 import io.kvision.state.observableListOf

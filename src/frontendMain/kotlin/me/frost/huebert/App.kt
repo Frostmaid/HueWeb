@@ -1,4 +1,4 @@
-package me.frost.hueweb
+package me.frost.huebert
 
 import io.kvision.*
 import io.kvision.panel.root

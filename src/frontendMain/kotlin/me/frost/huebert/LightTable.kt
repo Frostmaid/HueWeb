@@ -1,4 +1,4 @@
-package me.frost.hueweb
+package me.frost.huebert
 
 import io.kvision.core.Container
 import io.kvision.html.ButtonStyle

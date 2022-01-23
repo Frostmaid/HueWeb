@@ -1,4 +1,4 @@
-package me.frost.hueweb
+package me.frost.huebert
 
 import kotlinx.coroutines.reactive.awaitSingle
 import org.springframework.beans.factory.config.ConfigurableBeanFactory

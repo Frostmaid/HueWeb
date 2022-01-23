@@ -1,4 +1,4 @@
-package test.me.frost.hueweb
+package test.me.frost.huebert
 
 import io.kvision.test.SimpleSpec
 import kotlin.test.Test

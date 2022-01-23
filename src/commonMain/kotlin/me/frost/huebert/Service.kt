@@ -1,4 +1,4 @@
-package me.frost.hueweb
+package me.frost.huebert
 
 import io.kvision.annotations.KVService
 

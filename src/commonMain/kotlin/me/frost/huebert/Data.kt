@@ -1,4 +1,4 @@
-package me.frost.hueweb
+package me.frost.huebert
 
 import kotlinx.serialization.Serializable
 import kotlin.js.JsExport

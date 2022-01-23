@@ -30,7 +30,7 @@ val kvisionVersion: String by System.getProperties()
 val coroutinesVersion: String by project
 
 val webDir = file("src/frontendMain/web")
-val mainClassName = "me.frost.hueweb.MainKt"
+val mainClassName = "me.frost.huebert.MainKt"
 
 kotlin {
     jvm("backend") {
