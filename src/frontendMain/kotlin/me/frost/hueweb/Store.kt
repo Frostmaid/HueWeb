@@ -15,18 +15,18 @@ fun lightsReducer(state: List<Light>, action: LightAction): List<Light> {
         is LightAction.SwitchLight -> {
 
             CoroutineScope(Dispatchers.Default).launch {
-                withContext(Dispatchers.Default) { Model.switchLights(action.light) }
-                Model.lights()
+                withContext(Dispatchers.Default) { Model.switchLight(action.light) }
+                Model.callLights()
             }
 
-            Model.lightsList
+            Model.lights
         }
         is LightAction.Lights -> {
 
             CoroutineScope(window.asCoroutineDispatcher()).launch {
-                Model.lights()
+                Model.callLights()
             }
-            Model.lightsList
+            Model.lights
         }
     }
 }

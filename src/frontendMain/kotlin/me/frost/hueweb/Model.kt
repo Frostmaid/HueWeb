@@ -6,15 +6,15 @@ import io.kvision.utils.syncWithList
 
 object Model {
 
-    val lightsList: ObservableList<Light> = observableListOf()
+    val lights: ObservableList<Light> = observableListOf()
 
     private val bridgeService = BridgeService()
 
-    suspend fun lights() {
-        lightsList.syncWithList(bridgeService.getAllLights())
+    suspend fun callLights() {
+        lights.syncWithList(bridgeService.getAllLights())
     }
 
-    suspend fun switchLights(light: Light) {
+    suspend fun switchLight(light: Light) {
         bridgeService.switchLight(light)
     }
 

@@ -23,7 +23,7 @@ class App : Application() {
 
     override fun start(state: Map<String, Any>) {
         root("kvapp") {
-            lightTable(Model.lightsList)
+            lightTable(Model.lights)
         }
 
         store.dispatch(LightAction.Lights)
