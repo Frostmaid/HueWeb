@@ -3,6 +3,10 @@ package me.frost.hueweb
 import io.kvision.state.ObservableList
 import io.kvision.state.observableListOf
 import io.kvision.utils.syncWithList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 object Model {
 
@@ -10,12 +14,17 @@ object Model {
 
     private val bridgeService = BridgeService()
 
-    suspend fun callLights() {
-        lights.syncWithList(bridgeService.getAllLights())
+    fun callLights() {
+        CoroutineScope(Dispatchers.Default).launch {
+            lights.syncWithList(bridgeService.getAllLights())
+        }
     }
 
-    suspend fun switchLight(light: Light) {
-        bridgeService.switchLight(light)
+    fun switchLight(light: Light) {
+        CoroutineScope(Dispatchers.Default).launch {
+            withContext(Dispatchers.Default) { bridgeService.switchLight(light) }
+            callLights()
+        }
     }
 
 }
