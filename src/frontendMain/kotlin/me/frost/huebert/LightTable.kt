@@ -18,10 +18,10 @@ fun Container.lightTable(state: List<Light>) {
             layout = Layout.FITCOLUMNS,
             columns = listOf(
                 ColumnDefinition(title = "Name", field = "metadata.name"),
-                ColumnDefinition(title = "ON", field = "on.on",
+                ColumnDefinition(title = "Status", field = "on.on",
                     formatterComponentFunction = { _, _, light: Light ->
                         button(
-                            light.on.on.toString(),
+                            if(light.on.on) "On" else "Off",
                             style = if (light.on.on) ButtonStyle.SUCCESS else ButtonStyle.SECONDARY
                         ) {
                             onClick { Model.switchLight(light) }
