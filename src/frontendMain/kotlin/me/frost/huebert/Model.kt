@@ -11,6 +11,7 @@ import kotlinx.coroutines.withContext
 object Model {
 
     val lights: ObservableList<Light> = observableListOf()
+    val zones: ObservableList<Zone> = observableListOf()
 
     private val bridgeService = BridgeService()
 
@@ -24,6 +25,12 @@ object Model {
         CoroutineScope(Dispatchers.Default).launch {
             withContext(Dispatchers.Default) { bridgeService.switchLight(light) }
             callLights()
+        }
+    }
+
+    fun callZones() {
+        CoroutineScope(Dispatchers.Default).launch {
+            zones.syncWithList(bridgeService.getZones())
         }
     }
 

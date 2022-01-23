@@ -66,3 +66,20 @@ data class Alert(var action_values: List<String>)
 @JsExport
 @Serializable
 data class AlertRequest(var action: String)
+
+@JsExport
+@Serializable
+data class Zones(var data: List<Zone>)
+
+@JsExport
+@Serializable
+data class Zone(
+    var id: String,
+    var type: String,
+    var metadata: Metadata,
+    var children: List<Child>,
+)
+
+@JsExport
+@Serializable
+data class Child(var rid: String, var rtype: String)

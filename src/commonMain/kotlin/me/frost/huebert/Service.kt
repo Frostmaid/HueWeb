@@ -13,4 +13,6 @@ interface IBridgeService {
     suspend fun getAllLights(): List<Light>
 
     suspend fun switchLight(light: Light)
+
+    suspend fun getZones(): List<Zone>
 }

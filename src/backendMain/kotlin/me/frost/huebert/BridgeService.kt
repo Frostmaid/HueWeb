@@ -34,4 +34,15 @@ actual class BridgeService(
             .awaitBody<String>()
     }
 
+    override suspend fun getZones(): List<Zone> {
+        val result = bridgeWebClient
+            .get()
+            .uri("/zone")
+            .retrieve()
+            .toEntity(Zones::class.java)
+            .awaitSingle()
+
+        return result?.body?.data?.map { it } ?: emptyList()
+    }
+
 }
