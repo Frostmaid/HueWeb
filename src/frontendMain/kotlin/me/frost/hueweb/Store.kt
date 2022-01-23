@@ -2,10 +2,7 @@ package me.frost.hueweb
 
 import io.kvision.redux.RAction
 import kotlinx.browser.window
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 
 sealed class LightAction : RAction {
@@ -18,13 +15,11 @@ fun lightsReducer(state: List<Light>, action: LightAction): List<Light> {
         is LightAction.SwitchLight -> {
 
             CoroutineScope(Dispatchers.Default).launch {
-                println("foooooo")
-                Model.switchLights(action.light)
+                withContext(Dispatchers.Default) { Model.switchLights(action.light) }
+                Model.lights()
             }
 
-            println("bar")
             Model.lightsList
-
         }
         is LightAction.Lights -> {
 

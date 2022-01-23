@@ -108,9 +108,6 @@ kotlin {
         val frontendMain by getting {
             resources.srcDir(webDir)
             dependencies {
-                implementation(kotlin("stdlib-jdk8"))
-                implementation(kotlin("reflect"))
-
                 implementation("io.kvision:kvision:$kvisionVersion")
                 implementation("io.kvision:kvision-common-types:$kvisionVersion")
                 implementation("io.kvision:kvision-datacontainer:$kvisionVersion")
