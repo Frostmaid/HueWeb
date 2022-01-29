@@ -18,7 +18,7 @@ class App : Application() {
         val lights = Div { lightTable(Model.lights) }
         val zones = Div { zoneTable(Model.zones) }
 
-        root.navbar(label = "Huebert", type = NavbarType.FIXEDTOP) {
+        root.navbar(label = "Huebert", type = NavbarType.STICKYTOP) {
             nav {
                 navLink(label = "Lights") {
                     onClick {
