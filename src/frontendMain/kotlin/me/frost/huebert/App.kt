@@ -19,7 +19,7 @@ class App : Application() {
                 content = "Huebert"
                 align = Align.CENTER
             }
-            tabPanel( ) {
+            tabPanel {
                 addTab(
                     title = "Lights",
                     panel = Div { lightTable(Model.lights) }
