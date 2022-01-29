@@ -2,7 +2,7 @@ package me.frost.huebert
 
 import io.kvision.*
 import io.kvision.html.Align
-import io.kvision.html.div
+import io.kvision.html.Div
 import io.kvision.html.h1
 import io.kvision.panel.root
 import io.kvision.panel.tabPanel
@@ -13,23 +13,22 @@ class App : Application() {
         Model.callLights()
         Model.callZones()
 
+
         root("kvapp") {
             h1 {
                 content = "Huebert"
                 align = Align.CENTER
             }
-            tabPanel {
+            tabPanel( ) {
                 addTab(
                     title = "Lights",
-                    panel = div { lightTable(Model.lights) }
+                    panel = Div { lightTable(Model.lights) }
                 )
                 addTab(
                     title = "Zones",
-                    panel = div { zoneTable(Model.zones) }
+                    panel = Div { zoneTable(Model.zones) }
                 )
             }
-
-
         }
     }
 
