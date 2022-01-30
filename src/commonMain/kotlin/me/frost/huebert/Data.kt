@@ -73,15 +73,38 @@ data class Zones(var data: List<Zone>)
 
 @JsExport
 @Serializable
+data class Rooms(var data: List<Room>)
+
+@JsExport
+@Serializable
 data class Zone(
     var id: String,
     var type: String,
     var metadata: Metadata,
-    var children: List<Child>,
+    var children: List<Child>
 ){
     fun mapWithLights(lights: List<Light>): ZoneWithLights {
 
         return ZoneWithLights(
+            id = this.id,
+            type = this.type,
+            metadata = this.metadata,
+            lights = lights
+        )
+    }
+}
+
+@JsExport
+@Serializable
+data class Room(
+    var id: String,
+    var type: String,
+    var metadata: Metadata,
+    var children: List<Child>
+){
+    fun mapWithLights(lights: List<Light>): RoomWithLights {
+
+        return RoomWithLights(
             id = this.id,
             type = this.type,
             metadata = this.metadata,
@@ -103,3 +126,30 @@ data class ZoneWithLights(
     var metadata: Metadata,
     var lights: List<Light>,
 )
+
+@JsExport
+@Serializable
+data class RoomWithLights(
+    var id: String,
+    var type: String,
+    var metadata: Metadata,
+    var lights: List<Light>,
+)
+
+@JsExport
+@Serializable
+data class Device(
+    var id: String,
+    var type: String,
+    var metadata: Metadata,
+    var services: List<Child>
+)
+
+@JsExport
+@Serializable
+data class Devices(var data: List<Device>)
+
+enum class Type(internal val value: String) {
+    Light("light"),
+    Device("device")
+}

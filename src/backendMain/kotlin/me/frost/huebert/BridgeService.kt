@@ -63,4 +63,55 @@ actual class BridgeService(
         } ?: emptyList()
     }
 
+    override suspend fun getRooms(): List<RoomWithLights> {
+        val result = bridgeWebClient
+            .get()
+            .uri("/room")
+            .retrieve()
+            .toEntity(Rooms::class.java)
+            .awaitSingle()
+
+        val lights = getAllLights()
+        val devices = devices()
+
+        val map = result?.body?.data?.map { room ->
+            val devicesOfRoom = room.children
+                .filter { c -> c.rtype == Type.Device.value }
+                .map { it.rid }
+
+            val lightOfRoom = devices
+                .filter { devicesOfRoom.contains(it.id) }
+                .flatMap { it.services }
+                .filter { it.rtype == Type.Light.value }
+                .map { it.rid }
+
+            room.mapWithLights(lights.filter { l -> lightOfRoom.contains(l.id) })
+        }
+
+        return map ?: emptyList()
+    }
+
+    override suspend fun switchLightsInRoom(room: RoomWithLights, on: Boolean) {
+        room.lights
+            .forEach {
+                bridgeWebClient
+                    .put()
+                    .uri("/light/${it.id}")
+                    .body(Mono.just(it.mapToRequest(on)), LightRequest::class.java)
+                    .retrieve()
+                    .awaitBody<String>()
+            }
+    }
+
+    private suspend fun devices(): List<Device> {
+        val result = bridgeWebClient
+            .get()
+            .uri("/device")
+            .retrieve()
+            .toEntity(Devices::class.java)
+            .awaitSingle()
+
+        return result?.body?.data ?: emptyList()
+    }
+
 }

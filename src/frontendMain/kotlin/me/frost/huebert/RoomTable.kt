@@ -10,10 +10,12 @@ import io.kvision.tabulator.Layout
 import io.kvision.tabulator.TabulatorOptions
 import io.kvision.tabulator.tabulator
 
-fun Container.zoneTable(zoneList: List<ZoneWithLights>) {
+fun Container.roomTable(roomList: List<RoomWithLights>) {
+
+    println(roomList.joinToString { it.metadata.name })
 
     tabulator(
-        data = zoneList,
+        data = roomList,
         dataUpdateOnEdit = true,
         options = TabulatorOptions(
             layout = Layout.FITCOLUMNS,
@@ -21,19 +23,19 @@ fun Container.zoneTable(zoneList: List<ZoneWithLights>) {
                 ColumnDefinition(title = "Name", field = "metadata.name"),
                 ColumnDefinition(
                     title = "Lights",
-                    formatterComponentFunction = { _, _, zone: ZoneWithLights ->
-                        Span(zone.lights.joinToString { it.metadata.name })
+                    formatterComponentFunction = { _, _, room: RoomWithLights ->
+                        Span(room.lights.joinToString { it.metadata.name })
                     }
                 ),
                 ColumnDefinition(
                     title = "Status",
-                    formatterComponentFunction = { _, _, zone: ZoneWithLights ->
-                        val lightIsOn = zone.lights.any { it.on.on }
+                    formatterComponentFunction = { _, _, room: RoomWithLights ->
+                        val lightIsOn = room.lights.any { it.on.on }
                         button(
                             text = if (lightIsOn) "On" else "Off",
                             style = if (lightIsOn) ButtonStyle.SUCCESS else ButtonStyle.SECONDARY
                         ) {
-                            onClick { Model.switchLightsInZone(zone, !lightIsOn) }
+                            onClick { Model.switchLightsInRoom(room, !lightIsOn) }
                         }
                     }
                 )

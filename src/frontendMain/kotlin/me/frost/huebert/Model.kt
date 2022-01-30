@@ -12,6 +12,7 @@ object Model {
 
     val lights: ObservableList<Light> = observableListOf()
     val zones: ObservableList<ZoneWithLights> = observableListOf()
+    val rooms: ObservableList<RoomWithLights> = observableListOf()
 
     private val bridgeService = BridgeService()
 
@@ -38,6 +39,19 @@ object Model {
     fun callZones() {
         CoroutineScope(Dispatchers.Default).launch {
             zones.syncWithList(bridgeService.getZones())
+        }
+    }
+
+    fun callRooms(){
+        CoroutineScope(Dispatchers.Default).launch {
+            rooms.syncWithList(bridgeService.getRooms())
+        }
+    }
+
+    fun switchLightsInRoom(room: RoomWithLights, on: Boolean) {
+        CoroutineScope(Dispatchers.Default).launch {
+            withContext(Dispatchers.Default) { bridgeService.switchLightsInRoom(room, on) }
+            callRooms()
         }
     }
 
