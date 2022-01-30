@@ -1,6 +1,7 @@
 package me.frost.huebert
 
 import io.kvision.*
+import io.kvision.core.Cursor
 import io.kvision.html.Div
 import io.kvision.navbar.NavbarType
 import io.kvision.navbar.nav
@@ -21,12 +22,14 @@ class App : Application() {
         root.navbar(label = "Huebert", type = NavbarType.STICKYTOP) {
             nav {
                 navLink(label = "Lights") {
+                    cursor = Cursor.POINTER
                     onClick {
                         root.add(lights)
                         root.remove(zones)
                     }
                 }
                 navLink(label = "Zones") {
+                    cursor = Cursor.POINTER
                     onClick {
                         root.add(zones)
                         root.remove(lights)
