@@ -78,8 +78,28 @@ data class Zone(
     var type: String,
     var metadata: Metadata,
     var children: List<Child>,
-)
+){
+    fun mapWithLights(lights: List<Light>): ZoneWithLights {
+
+        return ZoneWithLights(
+            id = this.id,
+            type = this.type,
+            metadata = this.metadata,
+            lights = lights
+        )
+    }
+}
 
 @JsExport
 @Serializable
 data class Child(var rid: String, var rtype: String)
+
+
+@JsExport
+@Serializable
+data class ZoneWithLights(
+    var id: String,
+    var type: String,
+    var metadata: Metadata,
+    var lights: List<Light>,
+)

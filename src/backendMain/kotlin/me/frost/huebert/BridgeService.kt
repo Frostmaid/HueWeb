@@ -34,7 +34,19 @@ actual class BridgeService(
             .awaitBody<String>()
     }
 
-    override suspend fun getZones(): List<Zone> {
+    override suspend fun switchLightsInZone(zone: ZoneWithLights, on: Boolean) {
+        zone.lights
+            .forEach {
+                bridgeWebClient
+                    .put()
+                    .uri("/light/${it.id}")
+                    .body(Mono.just(it.mapToRequest(on)), LightRequest::class.java)
+                    .retrieve()
+                    .awaitBody<String>()
+            }
+    }
+
+    override suspend fun getZones(): List<ZoneWithLights> {
         val result = bridgeWebClient
             .get()
             .uri("/zone")
@@ -42,7 +54,13 @@ actual class BridgeService(
             .toEntity(Zones::class.java)
             .awaitSingle()
 
-        return result?.body?.data?.map { it } ?: emptyList()
+        val lights = getAllLights()
+
+        return result?.body?.data?.map {
+            it.mapWithLights(it.children
+                .filter { c -> c.rtype == "light" }
+                .mapNotNull { lights.find { l -> l.id == it.rid } })
+        } ?: emptyList()
     }
 
 }
