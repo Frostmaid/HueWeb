@@ -11,6 +11,9 @@ import io.kvision.panel.root
 import me.frost.huebert.client.LightClient
 import me.frost.huebert.client.RoomClient
 import me.frost.huebert.client.ZoneClient
+import me.frost.huebert.components.lightTable
+import me.frost.huebert.components.roomTable
+import me.frost.huebert.components.zoneTable
 
 class App : Application() {
 

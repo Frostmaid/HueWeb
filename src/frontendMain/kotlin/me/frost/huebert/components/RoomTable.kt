@@ -1,4 +1,4 @@
-package me.frost.huebert
+package me.frost.huebert.components
 
 
 import io.kvision.core.Container
@@ -7,8 +7,7 @@ import io.kvision.tabulator.ColumnDefinition
 import io.kvision.tabulator.Layout
 import io.kvision.tabulator.TabulatorOptions
 import io.kvision.tabulator.tabulator
-import me.frost.huebert.components.dimmingRoom
-import me.frost.huebert.components.switchRoom
+import me.frost.huebert.RoomWithLights
 
 fun Container.roomTable(roomList: List<RoomWithLights>) {
 
