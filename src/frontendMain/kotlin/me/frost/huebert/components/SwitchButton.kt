@@ -25,6 +25,7 @@ fun Container.switchLight() = ColumnDefinition(
 )
 
 fun Container.switchRoom() = ColumnDefinition(
+    headerSort = false,
     title = "Status",
     formatterComponentFunction = { _, _, room: RoomWithLights ->
         val lightIsOn = room.lights.any { it.on.on }
@@ -38,6 +39,7 @@ fun Container.switchRoom() = ColumnDefinition(
 )
 
 fun Container.switchZone() = ColumnDefinition(
+    headerSort = false,
     title = "Status",
     formatterComponentFunction = { _, _, zone: ZoneWithLights ->
         val lightIsOn = zone.lights.any { it.on.on }

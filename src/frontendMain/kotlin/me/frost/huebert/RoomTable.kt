@@ -22,6 +22,7 @@ fun Container.roomTable(roomList: List<RoomWithLights>) {
             columns = listOf(
                 ColumnDefinition(title = "Name", field = "metadata.name"),
                 ColumnDefinition(
+                    headerSort = false,
                     title = "Lights",
                     formatterComponentFunction = { _, _, room: RoomWithLights ->
                         Span(room.lights.joinToString { it.metadata.name })

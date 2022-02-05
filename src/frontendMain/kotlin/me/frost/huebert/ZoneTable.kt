@@ -20,6 +20,7 @@ fun Container.zoneTable(zoneList: List<ZoneWithLights>) {
             columns = listOf(
                 ColumnDefinition(title = "Name", field = "metadata.name"),
                 ColumnDefinition(
+                    headerSort = false,
                     title = "Lights",
                     formatterComponentFunction = { _, _, zone: ZoneWithLights ->
                         Span(zone.lights.joinToString { it.metadata.name })
