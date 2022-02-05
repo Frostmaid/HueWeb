@@ -12,18 +12,20 @@ data class Light(
     var type: String,
     var on: Switch,
     var color: Color? = null,
-    var alert: Alert
+    var alert: Alert,
+    var dimming: Dimming
 ) {
 
-    fun mapToRequest(on: Boolean): LightRequest {
+    fun mapToRequest(on: Boolean? = null, brightness: Int? = null): LightRequest {
 
         return LightRequest(
             id = this.id,
             metadata = this.metadata,
             type = this.type,
-            on = Switch(on = on),
+            on = on?.let { Switch(on = it) } ?: this.on,
             color = this.color,
-            alertRequest = AlertRequest("breathe")
+            alertRequest = AlertRequest("breathe"),
+            dimming = brightness?.let { Dimming(it.toDouble()) } ?: this.dimming
         )
     }
 }
@@ -37,11 +39,16 @@ data class LightRequest(
     var on: Switch,
     var color: Color? = null,
     var alertRequest: AlertRequest,
+    var dimming: Dimming
 )
 
 @JsExport
 @Serializable
 data class Lights(var data: List<Light>)
+
+@JsExport
+@Serializable
+data class Dimming(var brightness: Double)
 
 @JsExport
 @Serializable
@@ -82,7 +89,7 @@ data class Zone(
     var type: String,
     var metadata: Metadata,
     var children: List<Child>
-){
+) {
     fun mapWithLights(lights: List<Light>): ZoneWithLights {
 
         return ZoneWithLights(
@@ -101,7 +108,7 @@ data class Room(
     var type: String,
     var metadata: Metadata,
     var children: List<Child>
-){
+) {
     fun mapWithLights(lights: List<Light>): RoomWithLights {
 
         return RoomWithLights(

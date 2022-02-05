@@ -34,4 +34,13 @@ actual class LightService(
             .awaitBody<String>()
     }
 
+    override suspend fun dimmingLight(light: Light, brightness: Int) {
+        bridgeWebClient
+            .put()
+            .uri("/light/${light.id}")
+            .body(Mono.just(light.mapToRequest(brightness = brightness)), LightRequest::class.java)
+            .retrieve()
+            .awaitBody<String>()
+    }
+
 }

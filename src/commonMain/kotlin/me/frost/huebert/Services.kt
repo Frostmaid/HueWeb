@@ -8,6 +8,8 @@ interface ILightService {
     suspend fun lights(): List<Light>
 
     suspend fun switchLight(light: Light)
+
+    suspend fun dimmingLight(light: Light, brightness: Int)
 }
 
 @KVService
