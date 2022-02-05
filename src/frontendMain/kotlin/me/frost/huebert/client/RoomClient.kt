@@ -29,4 +29,10 @@ object RoomClient {
         }
     }
 
+    fun dimmingRoom(light: RoomWithLights, brightness: Int) {
+        CoroutineScope(Dispatchers.Default).launch {
+            withContext(Dispatchers.Default) { service.dimmingLight(light, brightness) }
+            LightClient.callLights()
+        }
+    }
 }

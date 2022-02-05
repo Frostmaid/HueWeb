@@ -43,4 +43,16 @@ actual class ZoneService(
                 .mapNotNull { lights.find { l -> l.id == it.rid } })
         } ?: emptyList()
     }
+
+    override suspend fun dimmingLight(zone: ZoneWithLights, brightness: Int) {
+        zone.lights
+            .forEach {
+                bridgeWebClient
+                    .put()
+                    .uri("/light/${it.id}")
+                    .body(Mono.just(it.mapToRequest(brightness = brightness)), LightRequest::class.java)
+                    .retrieve()
+                    .awaitBody<String>()
+            }
+    }
 }

@@ -7,6 +7,7 @@ import io.kvision.tabulator.ColumnDefinition
 import io.kvision.tabulator.Layout
 import io.kvision.tabulator.TabulatorOptions
 import io.kvision.tabulator.tabulator
+import me.frost.huebert.components.dimmingZone
 import me.frost.huebert.components.switchZone
 
 fun Container.zoneTable(zoneList: List<ZoneWithLights>) {
@@ -24,6 +25,7 @@ fun Container.zoneTable(zoneList: List<ZoneWithLights>) {
                         Span(zone.lights.joinToString { it.metadata.name })
                     }
                 ),
+                dimmingZone(),
                 switchZone()
             )
         )

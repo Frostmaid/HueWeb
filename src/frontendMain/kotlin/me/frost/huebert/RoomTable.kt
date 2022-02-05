@@ -7,6 +7,7 @@ import io.kvision.tabulator.ColumnDefinition
 import io.kvision.tabulator.Layout
 import io.kvision.tabulator.TabulatorOptions
 import io.kvision.tabulator.tabulator
+import me.frost.huebert.components.dimmingRoom
 import me.frost.huebert.components.switchRoom
 
 fun Container.roomTable(roomList: List<RoomWithLights>) {
@@ -26,6 +27,7 @@ fun Container.roomTable(roomList: List<RoomWithLights>) {
                         Span(room.lights.joinToString { it.metadata.name })
                     }
                 ),
+                dimmingRoom(),
                 switchRoom()
             )
         )

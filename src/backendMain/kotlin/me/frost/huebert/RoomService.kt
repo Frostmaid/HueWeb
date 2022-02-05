@@ -16,7 +16,7 @@ actual class RoomService(
 ) : IRoomService {
 
     override suspend fun rooms(): List<RoomWithLights> {
-        val result = bridgeWebClient
+        val rooms = bridgeWebClient
             .get()
             .uri("/room")
             .retrieve()
@@ -26,7 +26,7 @@ actual class RoomService(
         val lights = lightService.lights()
         val devices = devices()
 
-        val map = result?.body?.data?.map { room ->
+        val roomsWithLights = rooms?.body?.data?.map { room ->
             val devicesOfRoom = room.children
                 .filter { c -> c.rtype == Type.Device.value }
                 .map { it.rid }
@@ -40,7 +40,7 @@ actual class RoomService(
             room.mapWithLights(lights.filter { l -> lightOfRoom.contains(l.id) })
         }
 
-        return map ?: emptyList()
+        return roomsWithLights ?: emptyList()
     }
 
     override suspend fun switchLightsInRoom(room: RoomWithLights, on: Boolean) {
@@ -50,6 +50,18 @@ actual class RoomService(
                     .put()
                     .uri("/light/${it.id}")
                     .body(Mono.just(it.mapToRequest(on)), LightRequest::class.java)
+                    .retrieve()
+                    .awaitBody<String>()
+            }
+    }
+
+    override suspend fun dimmingLight(room: RoomWithLights, brightness: Int) {
+        room.lights
+            .forEach {
+                bridgeWebClient
+                    .put()
+                    .uri("/light/${it.id}")
+                    .body(Mono.just(it.mapToRequest(brightness = brightness)), LightRequest::class.java)
                     .retrieve()
                     .awaitBody<String>()
             }
