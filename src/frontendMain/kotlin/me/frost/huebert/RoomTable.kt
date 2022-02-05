@@ -9,6 +9,7 @@ import io.kvision.tabulator.ColumnDefinition
 import io.kvision.tabulator.Layout
 import io.kvision.tabulator.TabulatorOptions
 import io.kvision.tabulator.tabulator
+import me.frost.huebert.client.RoomClient
 
 fun Container.roomTable(roomList: List<RoomWithLights>) {
 
@@ -35,7 +36,7 @@ fun Container.roomTable(roomList: List<RoomWithLights>) {
                             text = if (lightIsOn) "On" else "Off",
                             style = if (lightIsOn) ButtonStyle.SUCCESS else ButtonStyle.SECONDARY
                         ) {
-                            onClick { Model.switchLightsInRoom(room, !lightIsOn) }
+                            onClick { RoomClient.switchLightsInRoom(room, !lightIsOn) }
                         }
                     }
                 )

@@ -7,6 +7,7 @@ import io.kvision.tabulator.ColumnDefinition
 import io.kvision.tabulator.Layout
 import io.kvision.tabulator.TabulatorOptions
 import io.kvision.tabulator.tabulator
+import me.frost.huebert.client.LightClient
 
 
 fun Container.lightTable(state: List<Light>) {
@@ -25,7 +26,7 @@ fun Container.lightTable(state: List<Light>) {
                             text = if(light.on.on) "On" else "Off",
                             style = if (light.on.on) ButtonStyle.SUCCESS else ButtonStyle.SECONDARY
                         ) {
-                            onClick { Model.switchLight(light) }
+                            onClick { LightClient.switchLight(light) }
                         }
                     }
                 )

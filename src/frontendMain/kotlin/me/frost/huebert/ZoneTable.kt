@@ -9,6 +9,7 @@ import io.kvision.tabulator.ColumnDefinition
 import io.kvision.tabulator.Layout
 import io.kvision.tabulator.TabulatorOptions
 import io.kvision.tabulator.tabulator
+import me.frost.huebert.client.ZoneClient
 
 fun Container.zoneTable(zoneList: List<ZoneWithLights>) {
 
@@ -33,7 +34,7 @@ fun Container.zoneTable(zoneList: List<ZoneWithLights>) {
                             text = if (lightIsOn) "On" else "Off",
                             style = if (lightIsOn) ButtonStyle.SUCCESS else ButtonStyle.SECONDARY
                         ) {
-                            onClick { Model.switchLightsInZone(zone, !lightIsOn) }
+                            onClick { ZoneClient.switchLightsInZone(zone, !lightIsOn) }
                         }
                     }
                 )

@@ -8,23 +8,26 @@ import io.kvision.navbar.nav
 import io.kvision.navbar.navLink
 import io.kvision.navbar.navbar
 import io.kvision.panel.root
+import me.frost.huebert.client.LightClient
+import me.frost.huebert.client.RoomClient
+import me.frost.huebert.client.ZoneClient
 
 class App : Application() {
 
     override fun start(state: Map<String, Any>) {
-        Model.callRooms()
+        RoomClient.callRooms()
 
         val root = root("kvapp")
-        val lights = Div { lightTable(Model.lights) }
-        val zones = Div { zoneTable(Model.zones) }
-        val rooms = Div { roomTable(Model.rooms) }
+        val lights = Div { lightTable(LightClient.lights) }
+        val zones = Div { zoneTable(ZoneClient.zones) }
+        val rooms = Div { roomTable(RoomClient.rooms) }
 
         root.navbar(label = "Huebert", type = NavbarType.STICKYTOP) {
             nav {
                 navLink(label = "Rooms") {
                     cursor = Cursor.POINTER
                     onClick {
-                        Model.callRooms()
+                        RoomClient.callRooms()
                         root.add(rooms)
                         root.remove(lights)
                         root.remove(zones)
@@ -33,7 +36,7 @@ class App : Application() {
                 navLink(label = "Zones") {
                     cursor = Cursor.POINTER
                     onClick {
-                        Model.callZones()
+                        ZoneClient.callZones()
                         root.add(zones)
                         root.remove(lights)
                         root.remove(rooms)
@@ -42,7 +45,7 @@ class App : Application() {
                 navLink(label = "Lights") {
                     cursor = Cursor.POINTER
                     onClick {
-                        Model.callLights()
+                        LightClient.callLights()
                         root.add(lights)
                         root.remove(zones)
                         root.remove(rooms)
