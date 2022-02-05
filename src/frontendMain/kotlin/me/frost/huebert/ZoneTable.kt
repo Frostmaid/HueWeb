@@ -2,14 +2,12 @@ package me.frost.huebert
 
 
 import io.kvision.core.Container
-import io.kvision.html.ButtonStyle
 import io.kvision.html.Span
-import io.kvision.html.button
 import io.kvision.tabulator.ColumnDefinition
 import io.kvision.tabulator.Layout
 import io.kvision.tabulator.TabulatorOptions
 import io.kvision.tabulator.tabulator
-import me.frost.huebert.client.ZoneClient
+import me.frost.huebert.components.switchZone
 
 fun Container.zoneTable(zoneList: List<ZoneWithLights>) {
 
@@ -26,18 +24,7 @@ fun Container.zoneTable(zoneList: List<ZoneWithLights>) {
                         Span(zone.lights.joinToString { it.metadata.name })
                     }
                 ),
-                ColumnDefinition(
-                    title = "Status",
-                    formatterComponentFunction = { _, _, zone: ZoneWithLights ->
-                        val lightIsOn = zone.lights.any { it.on.on }
-                        button(
-                            text = if (lightIsOn) "On" else "Off",
-                            style = if (lightIsOn) ButtonStyle.SUCCESS else ButtonStyle.SECONDARY
-                        ) {
-                            onClick { ZoneClient.switchLightsInZone(zone, !lightIsOn) }
-                        }
-                    }
-                )
+                switchZone()
             )
         )
     )
