@@ -2,7 +2,7 @@ package me.frost.huebert.components
 
 
 import io.kvision.core.Container
-import io.kvision.html.Span
+import io.kvision.html.Ul
 import io.kvision.tabulator.ColumnDefinition
 import io.kvision.tabulator.Layout
 import io.kvision.tabulator.TabulatorOptions
@@ -22,7 +22,7 @@ fun Container.zoneTable(zoneList: List<ZoneWithLights>) {
                     headerSort = false,
                     title = "Lights",
                     formatterComponentFunction = { _, _, zone: ZoneWithLights ->
-                        Span(zone.lights.joinToString { it.metadata.name })
+                        Ul(zone.lights.map { (it.metadata.name) })
                     }
                 ),
                 dimmingZone(),
