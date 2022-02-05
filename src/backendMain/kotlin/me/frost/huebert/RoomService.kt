@@ -10,60 +10,12 @@ import reactor.core.publisher.Mono
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-actual class BridgeService(
-    private val bridgeWebClient: WebClient
-) : IBridgeService {
+actual class RoomService(
+    private val bridgeWebClient: WebClient,
+    private val lightService: LightService
+) : IRoomService {
 
-    override suspend fun getAllLights(): List<Light> {
-        val result = bridgeWebClient
-            .get()
-            .uri("/light")
-            .retrieve()
-            .toEntity(Lights::class.java)
-            .awaitSingle()
-
-        return result?.body?.data?.map { it } ?: emptyList()
-    }
-
-    override suspend fun switchLight(light: Light) {
-        bridgeWebClient
-            .put()
-            .uri("/light/${light.id}")
-            .body(Mono.just(light.mapToRequest(!light.on.on)), LightRequest::class.java)
-            .retrieve()
-            .awaitBody<String>()
-    }
-
-    override suspend fun switchLightsInZone(zone: ZoneWithLights, on: Boolean) {
-        zone.lights
-            .forEach {
-                bridgeWebClient
-                    .put()
-                    .uri("/light/${it.id}")
-                    .body(Mono.just(it.mapToRequest(on)), LightRequest::class.java)
-                    .retrieve()
-                    .awaitBody<String>()
-            }
-    }
-
-    override suspend fun getZones(): List<ZoneWithLights> {
-        val result = bridgeWebClient
-            .get()
-            .uri("/zone")
-            .retrieve()
-            .toEntity(Zones::class.java)
-            .awaitSingle()
-
-        val lights = getAllLights()
-
-        return result?.body?.data?.map {
-            it.mapWithLights(it.children
-                .filter { c -> c.rtype == "light" }
-                .mapNotNull { lights.find { l -> l.id == it.rid } })
-        } ?: emptyList()
-    }
-
-    override suspend fun getRooms(): List<RoomWithLights> {
+    override suspend fun rooms(): List<RoomWithLights> {
         val result = bridgeWebClient
             .get()
             .uri("/room")
@@ -71,7 +23,7 @@ actual class BridgeService(
             .toEntity(Rooms::class.java)
             .awaitSingle()
 
-        val lights = getAllLights()
+        val lights = lightService.lights()
         val devices = devices()
 
         val map = result?.body?.data?.map { room ->

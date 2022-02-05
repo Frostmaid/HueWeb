@@ -3,22 +3,25 @@ package me.frost.huebert
 import io.kvision.annotations.KVService
 
 @KVService
-interface IPingService {
-    suspend fun ping(message: String): String
+interface ILightService {
+
+    suspend fun lights(): List<Light>
+
+    suspend fun switchLight(light: Light)
 }
 
 @KVService
-interface IBridgeService {
-
-    suspend fun getAllLights(): List<Light>
-
-    suspend fun switchLight(light: Light)
+interface IZoneService {
 
     suspend fun switchLightsInZone(zone: ZoneWithLights, on: Boolean)
 
-    suspend fun getZones(): List<ZoneWithLights>
+    suspend fun zones(): List<ZoneWithLights>
+}
 
-    suspend fun getRooms(): List<RoomWithLights>
+@KVService
+interface IRoomService {
+
+    suspend fun rooms(): List<RoomWithLights>
 
     suspend fun switchLightsInRoom(room: RoomWithLights, on: Boolean)
 }

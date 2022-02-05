@@ -7,24 +7,24 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.frost.huebert.BridgeService
 import me.frost.huebert.Light
+import me.frost.huebert.LightService
 
 object LightClient {
 
     val lights: ObservableList<Light> = observableListOf()
 
-    private val bridgeService = BridgeService()
+    private val service = LightService()
 
     fun callLights() {
         CoroutineScope(Dispatchers.Default).launch {
-            lights.syncWithList(bridgeService.getAllLights())
+            lights.syncWithList(service.lights())
         }
     }
 
     fun switchLight(light: Light) {
         CoroutineScope(Dispatchers.Default).launch {
-            withContext(Dispatchers.Default) { bridgeService.switchLight(light) }
+            withContext(Dispatchers.Default) { service.switchLight(light) }
             callLights()
         }
     }
