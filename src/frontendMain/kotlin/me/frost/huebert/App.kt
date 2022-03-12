@@ -10,6 +10,7 @@ import io.kvision.navbar.navbar
 import io.kvision.panel.root
 import me.frost.huebert.client.LightClient
 import me.frost.huebert.client.RoomClient
+import me.frost.huebert.client.SceneClient
 import me.frost.huebert.client.ZoneClient
 import me.frost.huebert.components.lightTable
 import me.frost.huebert.components.roomTable
@@ -19,11 +20,12 @@ class App : Application() {
 
     override fun start(state: Map<String, Any>) {
         RoomClient.callRooms()
+        SceneClient.callScenes()
 
         val root = root("kvapp")
         val lights = Div { lightTable(LightClient.lights) }
         val zones = Div { zoneTable(ZoneClient.zones) }
-        val rooms = Div { roomTable(RoomClient.rooms) }
+        val rooms = Div { roomTable(RoomClient.rooms, SceneClient.scenes) }
 
         root.navbar(label = "Huebert", type = NavbarType.STICKYTOP) {
             nav {

@@ -32,7 +32,7 @@ class KVApplication {
     private val appKey: String = ""
 
     @Bean
-    fun getManagers() = listOf(LightServiceManager, ZoneServiceManager, RoomServiceManager)
+    fun getManagers() = listOf(LightServiceManager, ZoneServiceManager, RoomServiceManager, SceneServiceManager)
 
     @Bean
     fun bridgeWebClient(webClientBuilder: WebClient.Builder): WebClient {

@@ -31,3 +31,10 @@ interface IRoomService {
 
     suspend fun dimmingLight(room: RoomWithLights, brightness: Int)
 }
+
+@KVService
+interface ISceneService {
+
+    suspend fun scenes(): List<Scene>
+
+}

@@ -1,5 +1,6 @@
 package me.frost.huebert
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.js.JsExport
 
@@ -160,3 +161,71 @@ enum class Type(internal val value: String) {
     Light("light"),
     Device("device")
 }
+
+@JsExport
+@Serializable
+data class Scenes(var data: List<Scene>)
+
+@JsExport
+@Serializable
+data class Scene(
+    var id: String,
+    var type: String,
+    var metadata: SceneMetadata,
+    var group: Child,
+    var actions: List<ActionGet>,
+    var palette: Palette,
+    var speed: Double
+)
+
+@JsExport
+@Serializable
+data class SceneMetadata(var name: String)
+
+@JsExport
+@Serializable
+data class ActionGet(var target: Child, var action: Action)
+
+@JsExport
+@Serializable
+data class Action(
+    var on: Switch,
+    var dimming: Dimming,
+    var color: Color? = null,
+    @SerialName("color_temperature")
+    var colorTemperature: ColorTemperature? = null,
+    var gradient: Gradient? = null
+)
+
+@JsExport
+@Serializable
+data class ColorTemperature(var mirek: Int)
+
+@JsExport
+@Serializable
+data class Gradient(var points: List<GradientPointGet>)
+
+@JsExport
+@Serializable
+data class GradientPointGet(var color: Color)
+
+@JsExport
+@Serializable
+data class Palette(
+    var color: List<ColorPaletteGet>,
+    var dimming: List<Dimming>,
+    @SerialName("color_temperature")
+    var colorTemperature: List<ColorTemperaturePaletteGet>
+)
+
+@JsExport
+@Serializable
+data class ColorPaletteGet(val color: Color, var dimming: Dimming)
+
+@JsExport
+@Serializable
+data class ColorTemperaturePaletteGet(
+    @SerialName("color_temperature")
+    val colorTemperature: ColorTemperature,
+    var dimming: Dimming
+)
