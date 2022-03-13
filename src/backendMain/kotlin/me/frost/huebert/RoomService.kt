@@ -55,7 +55,7 @@ actual class RoomService(
             }
     }
 
-    override suspend fun dimmingLight(room: RoomWithLights, brightness: Int) {
+    override suspend fun dimmingLight(room: RoomWithLights, brightness: Double) {
         room.lights
             .forEach {
                 bridgeWebClient

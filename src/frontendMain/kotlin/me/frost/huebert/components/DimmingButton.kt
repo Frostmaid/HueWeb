@@ -18,7 +18,7 @@ fun Container.dimmingLight() = ColumnDefinition(
     formatterComponentFunction = { _, _, light: Light ->
         rangeInput(value = light.dimming.brightness) {
             onClick {
-                LightClient.dimmingLight(light, value?.toInt() ?: 0)
+                LightClient.dimmingLight(light = light, brightness = value?.toDouble() ?: 0.0)
             }
         }
     }
@@ -30,7 +30,7 @@ fun Container.dimmingZone() = ColumnDefinition(
     formatterComponentFunction = { _, _, zone: ZoneWithLights ->
         rangeInput(value = maxOf(Double.MIN_VALUE, *zone.lights.map { it.dimming.brightness }.toTypedArray())) {
             onClick {
-                ZoneClient.dimmingZone(zone, value?.toInt() ?: 0)
+                ZoneClient.dimmingZone(light = zone, brightness = value?.toDouble() ?: 0.0)
             }
         }
     }
@@ -42,7 +42,7 @@ fun Container.dimmingRoom() = ColumnDefinition(
     formatterComponentFunction = { _, _, room: RoomWithLights ->
         rangeInput(value = maxOf(Double.MIN_VALUE, *room.lights.map { it.dimming.brightness }.toTypedArray())) {
             onClick {
-                RoomClient.dimmingRoom(room, value?.toInt() ?: 0)
+                RoomClient.dimmingRoom(light = room, brightness = value?.toDouble() ?: 0.0)
             }
         }
     }

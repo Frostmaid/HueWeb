@@ -29,7 +29,7 @@ object LightClient {
         }
     }
 
-    fun dimmingLight(light: Light, brightness: Int) {
+    fun dimmingLight(light: Light, brightness: Double) {
         CoroutineScope(Dispatchers.Default).launch {
             withContext(Dispatchers.Default) { service.dimmingLight(light, brightness) }
             callLights()

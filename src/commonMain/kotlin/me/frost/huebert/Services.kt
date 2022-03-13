@@ -9,7 +9,7 @@ interface ILightService {
 
     suspend fun switchLight(light: Light)
 
-    suspend fun dimmingLight(light: Light, brightness: Int)
+    suspend fun dimmingLight(light: Light, brightness: Double)
 }
 
 @KVService
@@ -19,7 +19,7 @@ interface IZoneService {
 
     suspend fun zones(): List<ZoneWithLights>
 
-    suspend fun dimmingLight(zone: ZoneWithLights, brightness: Int)
+    suspend fun dimmingLight(zone: ZoneWithLights, brightness: Double)
 }
 
 @KVService
@@ -29,7 +29,7 @@ interface IRoomService {
 
     suspend fun switchLightsInRoom(room: RoomWithLights, on: Boolean)
 
-    suspend fun dimmingLight(room: RoomWithLights, brightness: Int)
+    suspend fun dimmingLight(room: RoomWithLights, brightness: Double)
 }
 
 @KVService
@@ -38,5 +38,7 @@ interface ISceneService {
     suspend fun scenes(): List<Scene>
 
     suspend fun scenesForRoom(roomId: String): List<Scene>
+
+    suspend fun switchSceneInRoom(scene: Scene, room: RoomWithLights)
 
 }

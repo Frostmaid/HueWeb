@@ -46,11 +46,11 @@ private fun scenesColumn() = ColumnDefinition(
         ListTag(ListType.UL).addAll(
             SceneClient.callScenesForRoom(room.id)
                 .sortedBy { it.metadata.name.lowercase() }
-                .map {
+                .map { scene ->
                     Link(
-                        label = it.metadata.name
+                        label = scene.metadata.name
                     ).onClick {
-                        println("fuuu")
+                        SceneClient.switchSceneForRoom(scene, room)
                     }
                 }
         )

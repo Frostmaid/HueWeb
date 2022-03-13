@@ -44,7 +44,7 @@ actual class ZoneService(
         } ?: emptyList()
     }
 
-    override suspend fun dimmingLight(zone: ZoneWithLights, brightness: Int) {
+    override suspend fun dimmingLight(zone: ZoneWithLights, brightness: Double) {
         zone.lights
             .forEach {
                 bridgeWebClient

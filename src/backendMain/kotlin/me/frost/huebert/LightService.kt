@@ -34,7 +34,7 @@ actual class LightService(
             .awaitBody<String>()
     }
 
-    override suspend fun dimmingLight(light: Light, brightness: Int) {
+    override suspend fun dimmingLight(light: Light, brightness: Double) {
         bridgeWebClient
             .put()
             .uri("/light/${light.id}")

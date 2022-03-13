@@ -29,7 +29,7 @@ object ZoneClient {
         }
     }
 
-    fun dimmingZone(light: ZoneWithLights, brightness: Int) {
+    fun dimmingZone(light: ZoneWithLights, brightness: Double) {
         CoroutineScope(Dispatchers.Default).launch {
             withContext(Dispatchers.Default) { service.dimmingLight(light, brightness) }
             LightClient.callLights()

@@ -17,16 +17,24 @@ data class Light(
     var dimming: Dimming
 ) {
 
-    fun mapToRequest(on: Boolean? = null, brightness: Int? = null): LightRequest {
+    fun mapToRequest(
+        on: Boolean? = null,
+        brightness: Double? = null,
+        color: Color? = null,
+        colorTemperature: ColorTemperature? = null,
+        gradient: Gradient? = null
+    ): LightRequest {
 
         return LightRequest(
             id = this.id,
             metadata = this.metadata,
             type = this.type,
             on = on?.let { Switch(on = it) } ?: this.on,
-            color = this.color,
-            alertRequest = AlertRequest("breathe"),
-            dimming = brightness?.let { Dimming(it.toDouble()) } ?: this.dimming
+            color = color,
+            alertRequest = AlertRequest("none"),
+            colorTemperature = colorTemperature,
+            gradient = gradient,
+            dimming = brightness?.let { Dimming(it) } ?: this.dimming
         )
     }
 }
@@ -40,7 +48,10 @@ data class LightRequest(
     var on: Switch,
     var color: Color? = null,
     var alertRequest: AlertRequest,
-    var dimming: Dimming
+    var dimming: Dimming,
+    @SerialName("color_temperature")
+    var colorTemperature: ColorTemperature? = null,
+    var gradient: Gradient? = null
 )
 
 @JsExport
