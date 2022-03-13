@@ -6,6 +6,7 @@ import io.kvision.utils.syncWithList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import me.frost.huebert.ResourceType
 import me.frost.huebert.Scene
 import me.frost.huebert.SceneService
 
@@ -19,6 +20,10 @@ object SceneClient {
         CoroutineScope(Dispatchers.Default).launch {
             scenes.syncWithList(service.scenes())
         }
+    }
+
+    fun callScenesForRoom(roomId: String): List<Scene> {
+        return scenes.filter { it.group.rtype == ResourceType.Room.value && it.group.rid == roomId }
     }
 
 }

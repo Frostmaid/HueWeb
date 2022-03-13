@@ -28,13 +28,13 @@ actual class RoomService(
 
         val roomsWithLights = rooms?.body?.data?.map { room ->
             val devicesOfRoom = room.children
-                .filter { c -> c.rtype == Type.Device.value }
+                .filter { c -> c.rtype == ResourceType.Device.value }
                 .map { it.rid }
 
             val lightOfRoom = devices
                 .filter { devicesOfRoom.contains(it.id) }
                 .flatMap { it.services }
-                .filter { it.rtype == Type.Light.value }
+                .filter { it.rtype == ResourceType.Light.value }
                 .map { it.rid }
 
             room.mapWithLights(lights.filter { l -> lightOfRoom.contains(l.id) })

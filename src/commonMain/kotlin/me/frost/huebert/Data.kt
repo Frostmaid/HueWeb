@@ -157,9 +157,11 @@ data class Device(
 @Serializable
 data class Devices(var data: List<Device>)
 
-enum class Type(internal val value: String) {
+enum class ResourceType(internal val value: String) {
     Light("light"),
-    Device("device")
+    Device("device"),
+    Room("room"),
+    Zone("zone")
 }
 
 @JsExport

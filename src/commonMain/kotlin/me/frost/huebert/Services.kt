@@ -37,4 +37,6 @@ interface ISceneService {
 
     suspend fun scenes(): List<Scene>
 
+    suspend fun scenesForRoom(roomId: String): List<Scene>
+
 }

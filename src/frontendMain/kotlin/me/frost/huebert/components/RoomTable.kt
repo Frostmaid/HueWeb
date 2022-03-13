@@ -2,20 +2,18 @@ package me.frost.huebert.components
 
 
 import io.kvision.core.Container
-import io.kvision.dropdown.DropDown
-import io.kvision.dropdown.separator
-import io.kvision.html.ButtonStyle
+import io.kvision.html.Link
+import io.kvision.html.ListTag
+import io.kvision.html.ListType
 import io.kvision.html.Ul
-import io.kvision.html.button
-import io.kvision.state.ObservableList
 import io.kvision.tabulator.ColumnDefinition
 import io.kvision.tabulator.Layout
 import io.kvision.tabulator.TabulatorOptions
 import io.kvision.tabulator.tabulator
 import me.frost.huebert.RoomWithLights
-import me.frost.huebert.Scene
+import me.frost.huebert.client.SceneClient
 
-fun Container.roomTable(roomList: List<RoomWithLights>, scenes: ObservableList<Scene>) {
+fun Container.roomTable(roomList: List<RoomWithLights>) {
 
     tabulator(
         data = roomList,
@@ -25,7 +23,7 @@ fun Container.roomTable(roomList: List<RoomWithLights>, scenes: ObservableList<S
             columns = listOf(
                 ColumnDefinition(title = "Name", field = "metadata.name"),
                 lightsColumn(),
-                scenesColumn(scenes),
+                scenesColumn(),
                 dimmingRoom(),
                 switchRoom()
             )
@@ -41,20 +39,22 @@ private fun lightsColumn() = ColumnDefinition(
     }
 )
 
-private fun scenesColumn(scenes: ObservableList<Scene>) = ColumnDefinition(
+private fun scenesColumn() = ColumnDefinition(
     headerSort = false,
     title = "Scenes",
-    formatterComponentFunction = { _, _, _: RoomWithLights ->
-        DropDown(text = "Scenes", style = ButtonStyle.OUTLINEDARK) {
-            scenes.forEach {
-                button(
-                    text = it.metadata.name
-                ) {
-                    onClick { }
+    formatterComponentFunction = { _, _, room: RoomWithLights ->
+        ListTag(ListType.UL).addAll(
+            SceneClient.callScenesForRoom(room.id)
+                .sortedBy { it.metadata.name.lowercase() }
+                .map {
+                    Link(
+                        label = it.metadata.name
+                    ).onClick {
+                        println("fuuu")
+                    }
                 }
-                separator()
-            }
-        }
+        )
+
     }
 )
 

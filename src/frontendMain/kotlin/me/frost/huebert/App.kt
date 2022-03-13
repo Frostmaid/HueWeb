@@ -25,7 +25,7 @@ class App : Application() {
         val root = root("kvapp")
         val lights = Div { lightTable(LightClient.lights) }
         val zones = Div { zoneTable(ZoneClient.zones) }
-        val rooms = Div { roomTable(RoomClient.rooms, SceneClient.scenes) }
+        val rooms = Div { roomTable(RoomClient.rooms) }
 
         root.navbar(label = "Huebert", type = NavbarType.STICKYTOP) {
             nav {

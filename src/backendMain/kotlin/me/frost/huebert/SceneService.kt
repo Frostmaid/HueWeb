@@ -24,4 +24,8 @@ actual class SceneService(
         return result?.body?.data?.map { it } ?: emptyList()
     }
 
+    override suspend fun scenesForRoom(roomId: String): List<Scene> {
+        return scenes().filter { it.group.rtype == ResourceType.Room.value && it.group.rid == roomId }
+    }
+
 }
