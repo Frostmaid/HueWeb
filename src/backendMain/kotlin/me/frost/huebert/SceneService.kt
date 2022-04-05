@@ -30,26 +30,33 @@ actual class SceneService(
     }
 
     override suspend fun switchSceneInRoom(scene: Scene, room: RoomWithLights) {
-        room.lights
-            .forEach { light ->
-                val action = scene.actions.find { a -> a.target.rid == light.id }?.action
-                bridgeWebClient
-                    .put()
-                    .uri("/light/${light.id}")
-                    .body(
-                        Mono.just(
-                            light.mapToRequest(
-                                on = action?.on?.on,
-                                brightness = action?.dimming?.brightness,
-                                color = action?.color,
-                                colorTemperature = action?.colorTemperature,
-                                gradient = action?.gradient
-                            )
-                        ), LightRequest::class.java
-                    )
-                    .retrieve()
-                    .awaitBody<String>()
-            }
+        switchLights(scene, room.lights)
+    }
+
+    override suspend fun switchSceneInZone(scene: Scene, zone: ZoneWithLights) {
+        switchLights(scene, zone.lights)
+    }
+
+    private suspend fun switchLights(scene: Scene, lights: List<Light>) {
+        lights.forEach { light ->
+            val action = scene.actions.find { a -> a.target.rid == light.id }?.action
+            bridgeWebClient
+                .put()
+                .uri("/light/${light.id}")
+                .body(
+                    Mono.just(
+                        light.mapToRequest(
+                            on = action?.on?.on,
+                            brightness = action?.dimming?.brightness,
+                            color = action?.color,
+                            colorTemperature = action?.colorTemperature,
+                            gradient = action?.gradient
+                        )
+                    ), LightRequest::class.java
+                )
+                .retrieve()
+                .awaitBody<String>()
+        }
     }
 
 }

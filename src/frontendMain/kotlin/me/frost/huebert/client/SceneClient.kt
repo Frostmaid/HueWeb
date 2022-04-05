@@ -7,10 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.frost.huebert.ResourceType
-import me.frost.huebert.RoomWithLights
-import me.frost.huebert.Scene
-import me.frost.huebert.SceneService
+import me.frost.huebert.*
 
 object SceneClient {
 
@@ -28,9 +25,21 @@ object SceneClient {
         return scenes.filter { it.group.rtype == ResourceType.Room.value && it.group.rid == roomId }
     }
 
+    fun callScenesForZone(zoneId: String): List<Scene> {
+        return scenes.filter { it.group.rtype == ResourceType.Zone.value && it.group.rid == zoneId }
+    }
+
     fun switchSceneForRoom(scene: Scene, room: RoomWithLights) {
         CoroutineScope(Dispatchers.Default).launch {
             withContext(Dispatchers.Default) { service.switchSceneInRoom(scene, room) }
+            RoomClient.callRooms()
+        }
+
+    }
+
+    fun switchSceneForZone(scene: Scene, zone: ZoneWithLights) {
+        CoroutineScope(Dispatchers.Default).launch {
+            withContext(Dispatchers.Default) { service.switchSceneInZone(scene, zone) }
             RoomClient.callRooms()
         }
 

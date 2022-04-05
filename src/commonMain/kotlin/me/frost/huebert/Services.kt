@@ -41,4 +41,6 @@ interface ISceneService {
 
     suspend fun switchSceneInRoom(scene: Scene, room: RoomWithLights)
 
+    suspend fun switchSceneInZone(scene: Scene, zone: ZoneWithLights)
+
 }
