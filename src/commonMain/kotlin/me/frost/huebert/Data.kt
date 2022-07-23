@@ -203,7 +203,7 @@ data class ActionGet(var target: Child, var action: Action)
 @Serializable
 data class Action(
     var on: Switch,
-    var dimming: Dimming,
+    var dimming: Dimming? = null,
     var color: Color? = null,
     @SerialName("color_temperature")
     var colorTemperature: ColorTemperature? = null,

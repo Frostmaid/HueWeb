@@ -40,7 +40,7 @@ object SceneClient {
     fun switchSceneForZone(scene: Scene, zone: ZoneWithLights) {
         CoroutineScope(Dispatchers.Default).launch {
             withContext(Dispatchers.Default) { service.switchSceneInZone(scene, zone) }
-            RoomClient.callRooms()
+            ZoneClient.callZones()
         }
 
     }
