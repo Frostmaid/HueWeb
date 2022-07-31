@@ -4,6 +4,9 @@ import io.kvision.core.Container
 import io.kvision.html.ButtonStyle
 import io.kvision.html.button
 import io.kvision.tabulator.ColumnDefinition
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import me.frost.huebert.Light
 import me.frost.huebert.RoomWithLights
 import me.frost.huebert.ZoneWithLights
@@ -33,7 +36,11 @@ fun Container.switchRoom() = ColumnDefinition(
             text = if (lightIsOn) "On" else "Off",
             style = if (lightIsOn) ButtonStyle.SUCCESS else ButtonStyle.SECONDARY
         ) {
-            onClick { RoomClient.switchLightsInRoom(room, !lightIsOn) }
+            onClick {
+                CoroutineScope(Dispatchers.Default).launch {
+                    RoomClient.switchLightsInRoom(room, !lightIsOn)
+                }
+            }
         }
     }
 )
@@ -47,7 +54,11 @@ fun Container.switchZone() = ColumnDefinition(
             text = if (lightIsOn) "On" else "Off",
             style = if (lightIsOn) ButtonStyle.SUCCESS else ButtonStyle.SECONDARY
         ) {
-            onClick { ZoneClient.switchLightsInZone(zone, !lightIsOn) }
+            onClick {
+                CoroutineScope(Dispatchers.Default).launch {
+                    ZoneClient.switchLightsInZone(zone, !lightIsOn)
+                }
+            }
         }
     }
 )

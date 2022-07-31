@@ -1,13 +1,14 @@
 package me.frost.huebert
 
 import io.kvision.*
-import io.kvision.core.Cursor
 import io.kvision.html.Div
-import io.kvision.navbar.NavbarType
-import io.kvision.navbar.nav
-import io.kvision.navbar.navLink
-import io.kvision.navbar.navbar
 import io.kvision.panel.root
+import io.kvision.panel.tabPanel
+import io.kvision.routing.Routing
+import io.kvision.routing.Strategy
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import me.frost.huebert.client.LightClient
 import me.frost.huebert.client.RoomClient
 import me.frost.huebert.client.SceneClient
@@ -17,48 +18,37 @@ import me.frost.huebert.components.roomTable
 import me.frost.huebert.components.zoneTable
 
 class App : Application() {
-
     override fun start(state: Map<String, Any>) {
-        RoomClient.callRooms()
-        SceneClient.callScenes()
+        Routing.init(root = "/", strategy = Strategy.ALL)
 
         val root = root("kvapp")
-        val lights = Div { lightTable(LightClient.lights) }
-        val zones = Div { zoneTable(ZoneClient.zones) }
-        val rooms = Div { roomTable(RoomClient.rooms) }
 
-        root.navbar(label = "Huebert", type = NavbarType.STICKYTOP) {
-            nav {
-                navLink(label = "Rooms") {
-                    cursor = Cursor.POINTER
-                    onClick {
-                        RoomClient.callRooms()
-                        root.add(rooms)
-                        root.remove(lights)
-                        root.remove(zones)
-                    }
+        root.tabPanel {
+            addTab("Rooms", Div {
+                CoroutineScope(Dispatchers.Default).launch {
+                    SceneClient.callScenes()
+                    RoomClient.callRooms()
+                }.run {
+                    add(Div { roomTable(RoomClient.rooms) })
                 }
-                navLink(label = "Zones") {
-                    cursor = Cursor.POINTER
-                    onClick {
-                        ZoneClient.callZones()
-                        root.add(zones)
-                        root.remove(lights)
-                        root.remove(rooms)
-                    }
+            }, route = "/rooms")
+            addTab("Zones", Div {
+                CoroutineScope(Dispatchers.Default).launch {
+                    SceneClient.callScenes()
+                    ZoneClient.callZones()
+                }.run {
+                    add(Div { zoneTable(ZoneClient.zones) })
                 }
-                navLink(label = "Lights") {
-                    cursor = Cursor.POINTER
-                    onClick {
-                        LightClient.callLights()
-                        root.add(lights)
-                        root.remove(zones)
-                        root.remove(rooms)
-                    }
+            }, route = "/zones")
+            addTab("Lights", Div {
+                CoroutineScope(Dispatchers.Default).launch {
+                    SceneClient.callScenes()
+                    LightClient.callLights()
+                }.run {
+                    add(Div { lightTable(LightClient.lights) })
                 }
-            }
+            }, route = "/lights")
         }
-        root.add(rooms)
     }
 }
 

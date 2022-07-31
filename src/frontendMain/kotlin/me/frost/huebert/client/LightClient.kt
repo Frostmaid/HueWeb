@@ -16,10 +16,8 @@ object LightClient {
 
     private val service = LightService()
 
-    fun callLights() {
-        CoroutineScope(Dispatchers.Default).launch {
+    suspend fun callLights() {
             lights.syncWithList(service.lights())
-        }
     }
 
     fun switchLight(light: Light) {

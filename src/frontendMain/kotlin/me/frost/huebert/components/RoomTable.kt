@@ -10,6 +10,9 @@ import io.kvision.tabulator.ColumnDefinition
 import io.kvision.tabulator.Layout
 import io.kvision.tabulator.TabulatorOptions
 import io.kvision.tabulator.tabulator
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import me.frost.huebert.RoomWithLights
 import me.frost.huebert.client.SceneClient
 
@@ -50,11 +53,13 @@ private fun scenesColumn() = ColumnDefinition(
                     Link(
                         label = scene.metadata.name
                     ).onClick {
-                        SceneClient.switchSceneForRoom(scene, room)
+                        CoroutineScope(Dispatchers.Default).launch {
+                            SceneClient.switchSceneForRoom(scene, room)
+
+                        }
                     }
                 }
-        )
 
-    }
-)
+        )
+    })
 
